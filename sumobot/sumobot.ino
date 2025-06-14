@@ -64,23 +64,32 @@ void loop() {
     return;
   }
 
-  bool opponentDetected = false;
+// Checks which sensor triggered movement and THEN moves 
+  int closestSensor = -1;
+  long minDist = 9999;
   for (int i = 0; i < numSensors; i++) {
     long dist = readUltrasonic(trigPins[i], echoPins[i]);
-    if (dist > 0 && dist < detectionThreshold) {
-      opponentDetected = true;
-      break;
+    if (dist > 0 && dist < minDist) {
+      minDist = dist;
+      closestSensor = i;
     }
   }
 
-  if (opponentDetected) {
-    moveForward();
+  if (closestSensor != -1 && minDist < detectionThreshold) {
+    if (closestSensor == 0) {
+      moveLeft();
+    } else if (closestSensor == 1) {
+      moveForward();
+    } else if (closestSensor == 2) {
+      moveRight();
+    }
   } else {
     stopAll();
   }
 
   delay(100);
 }
+
 
 void moveForward() {
   // front_left
@@ -123,6 +132,27 @@ void moveRight() {
   digitalWrite(IN2_BR, HIGH);
   analogWrite(PWM_BR, motorSpeed);
 }
+
+void moveLeft() {
+  // left_back
+  digitalWrite(IN1_FL, LOW);
+  digitalWrite(IN2_FL, HIGH);
+  analogWrite(PWM_FL, motorSpeed);
+
+  digitalWrite(IN1_BL, LOW);
+  digitalWrite(IN2_BL, HIGH);
+  analogWrite(PWM_BL, motorSpeed);
+
+  // right_spins_forward
+  digitalWrite(IN1_FR, HIGH);
+  digitalWrite(IN2_FR, LOW);
+  analogWrite(PWM_FR, motorSpeed);
+
+  digitalWrite(IN1_BR, HIGH);
+  digitalWrite(IN2_BR, LOW);
+  analogWrite(PWM_BR, motorSpeed);
+}
+
 
 void stopAll() {
   analogWrite(PWM_FL, 0);
