@@ -1,4 +1,4 @@
-# sumobots2025# CTRL + ALT + DEFEAT 
+# CTRL + ALT + DEFEAT 
 
 This is the Arduino code powering our sumobot for competition.  
 We’re using an all-wheel-drive setup with directional sensing and basic edge detection to stay in the ring and fight opponents.
