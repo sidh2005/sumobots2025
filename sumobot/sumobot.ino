@@ -1,5 +1,4 @@
-// ========== Motor Pin Setup ==========
-// Left side (Motor A & B)
+// pin_init_left
 const int IN1_FL = 2;
 const int IN2_FL = 3;
 const int PWM_FL = 4;
@@ -8,7 +7,7 @@ const int IN1_BL = 5;
 const int IN2_BL = 6;
 const int PWM_BL = 7;
 
-// Right side (Motor C & D)
+// pin_init_right
 const int IN1_FR = 8;
 const int IN2_FR = 9;
 const int PWM_FR = 10;
@@ -17,16 +16,16 @@ const int IN1_BR = 11;
 const int IN2_BR = 12;
 const int PWM_BR = 13;
 
-// ========== Sensor Setup ==========
+// ir_sensor_init
 const int irPin = A0; // IR Sensor pin
 
-// Ultrasonic
+// ultrasonic_init
 const int trigPins[3] = {A1, A3, A5};
 const int echoPins[3] = {A2, A4, A6};
 const int numSensors = 3;
 const int detectionThreshold = 30; // cm
 
-// ========== Movement Settings ==========
+// motor_init
 int motorSpeed = 200; // 0–255
 
 void setup() {
@@ -83,32 +82,30 @@ void loop() {
   delay(100);
 }
 
-// ======= Movement Functions =======
-
 void moveForward() {
-  // FL
+  // front_left
   digitalWrite(IN1_FL, HIGH);
   digitalWrite(IN2_FL, LOW);
   analogWrite(PWM_FL, motorSpeed);
 
-  // BL
+  // back_left
   digitalWrite(IN1_BL, HIGH);
   digitalWrite(IN2_BL, LOW);
   analogWrite(PWM_BL, motorSpeed);
 
-  // FR
+  // front_right
   digitalWrite(IN1_FR, HIGH);
   digitalWrite(IN2_FR, LOW);
   analogWrite(PWM_FR, motorSpeed);
 
-  // BR
+  // back_right
   digitalWrite(IN1_BR, HIGH);
   digitalWrite(IN2_BR, LOW);
   analogWrite(PWM_BR, motorSpeed);
 }
 
 void moveRight() {
-  // Left wheels forward
+  // left_ahead
   digitalWrite(IN1_FL, HIGH);
   digitalWrite(IN2_FL, LOW);
   analogWrite(PWM_FL, motorSpeed);
@@ -117,7 +114,7 @@ void moveRight() {
   digitalWrite(IN2_BL, LOW);
   analogWrite(PWM_BL, motorSpeed);
 
-  // Right wheels backward
+  // right_spins_back
   digitalWrite(IN1_FR, LOW);
   digitalWrite(IN2_FR, HIGH);
   analogWrite(PWM_FR, motorSpeed);
@@ -134,8 +131,7 @@ void stopAll() {
   analogWrite(PWM_BR, 0);
 }
 
-// ======= Ultrasonic Function =======
-
+// ultrasonic_read
 long readUltrasonic(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
