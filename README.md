@@ -28,9 +28,9 @@ We’re using an all-wheel-drive setup with directional sensing and basic edge d
 
 ## How It Works
 
-- Code logic is all in `sumbot.ino`
-- Pin assignments and motor setup are up top
-- Opponent detection logic prioritises the *closest* sensor reading
+- Code logic can be found in `sumbot.ino`
+- Pin assignments and motor setup inits can be found inside the code as well. 
+- Opponent detection logic prioritises the *closest* sensor reading. 
 - Movement logic is mapped clearly: `moveForward()`, `moveLeft()`, `moveRight()`, `stopAll()`
 
 ---
