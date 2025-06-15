@@ -1,3 +1,5 @@
+#include <Servo.h>
+
 // pin_init_left
 const int IN1_FL = 2;
 const int IN2_FL = 3;
@@ -25,11 +27,23 @@ const int echoPins[3] = {A2, A4, A6};
 const int numSensors = 3;
 const int detectionThreshold = 30; // cm
 
+// servo_init (placeholder pin numbers)
+const int SERVO_PIN = 14;
+const int RAMP_LOWERED_ANGLE = 15;
+const int RAMP_LIFTED_ANGLE = 85;
+bool rampDeployed = false;
+
+Servo rampServo; // Servo object (GPT told me to put it here not sure how this works yet)
+
 // motor_init
 int motorSpeed = 200; // 0–255
 
 void setup() {
   Serial.begin(9600);
+
+  // Ramp initialisation
+  rampServo.attach(SERVO_PIN);
+  deployRamp();
 
   // Set motor pins as output
   int motorPins[] = {
@@ -159,6 +173,7 @@ void stopAll() {
   analogWrite(PWM_BL, 0);
   analogWrite(PWM_FR, 0);
   analogWrite(PWM_BR, 0);
+  stowRamp();
 }
 
 // ultrasonic_read
@@ -171,4 +186,16 @@ long readUltrasonic(int trigPin, int echoPin) {
 
   long duration = pulseIn(echoPin, HIGH, 30000);
   return duration * 0.034 / 2;
+}
+
+void deployRamp() {
+  rampServo.write(RAMP_LOWERED_ANGLE);
+  rampDeployed = true;
+  Serial.println("RAMP LOWERED");
+}
+
+void stowRamp() {
+  rampServo.write(RAMP_LIFTED_ANGLE);
+  rampDeployed = false;
+  Serial.println("RAMP LIFTED");
 }
