@@ -22,13 +22,14 @@ const int PWM_BR = 13;
 const int irPin = A0; // IR Sensor pin
 
 // ultrasonic_init
-const int trigPins[3] = {A1, A3, A5};
-const int echoPins[3] = {A2, A4, A6};
-const int numSensors = 3;
+const int trigPins[4] = {22, 30, 38, 46};
+const int echoPins[4] = {24, 32, 40, 48};
+const int numSensors = 4;
 const int detectionThreshold = 30; // cm
 
 // servo_init (placeholder pin numbers)
-const int SERVO_PIN = 14;
+const int SERVO_PIN_1 = 11;
+const int SERVO_PIN_2 = 12;
 const int RAMP_LOWERED_ANGLE = 15;
 const int RAMP_LIFTED_ANGLE = 85;
 bool rampDeployed = false;
