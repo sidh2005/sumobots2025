@@ -1,21 +1,22 @@
+
 #include <Servo.h>
 
 // pin_init_left
-const int IN1_FL = 2;
-const int IN2_FL = 3;
-const int PWM_FL = 4;
+const int IN1_FL = 9;
+const int IN2_FL = 8;
+const int PWM_FL = 10;
 
-const int IN1_BL = 5;
+const int IN1_BL = 7;
 const int IN2_BL = 6;
-const int PWM_BL = 7;
+const int PWM_BL = 11;
 
 // pin_init_right
-const int IN1_FR = 8;
-const int IN2_FR = 9;
-const int PWM_FR = 10;
+const int IN1_FR = 5;
+const int IN2_FR = 4;
+const int PWM_FR = 12;
 
-const int IN1_BR = 11;
-const int IN2_BR = 12;
+const int IN1_BR = 3;
+const int IN2_BR = 2;
 const int PWM_BR = 13;
 
 // ir_sensor_init
@@ -43,7 +44,8 @@ void setup() {
   Serial.begin(9600);
 
   // Ramp initialisation
-  rampServo.attach(SERVO_PIN);
+  rampServo.attach(SERVO_PIN_1);
+  rampServo.attach(SERVO_PIN_2);
   deployRamp();
 
   // Set motor pins as output
