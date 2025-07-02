@@ -1,35 +1,52 @@
-// pin_init_left
-const int IN1_FL = 2;
-const int IN2_FL = 3;
-const int PWM_FL = 4;
 
-const int IN1_BL = 5;
+#include <Servo.h>
+
+// pin_init_left
+const int IN1_FL = 9;
+const int IN2_FL = 8;
+const int PWM_FL = 10;
+
+const int IN1_BL = 7;
 const int IN2_BL = 6;
-const int PWM_BL = 7;
+const int PWM_BL = 11;
 
 // pin_init_right
-const int IN1_FR = 8;
-const int IN2_FR = 9;
-const int PWM_FR = 10;
+const int IN1_FR = 5;
+const int IN2_FR = 4;
+const int PWM_FR = 12;
 
-const int IN1_BR = 11;
-const int IN2_BR = 12;
+const int IN1_BR = 3;
+const int IN2_BR = 2;
 const int PWM_BR = 13;
 
 // ir_sensor_init
 const int irPin = A0; // IR Sensor pin
 
 // ultrasonic_init
-const int trigPins[3] = {A1, A3, A5};
-const int echoPins[3] = {A2, A4, A6};
-const int numSensors = 3;
+const int trigPins[4] = {22, 30, 38, 46};
+const int echoPins[4] = {24, 32, 40, 48};
+const int numSensors = 4;
 const int detectionThreshold = 30; // cm
+
+// servo_init (placeholder pin numbers)
+const int SERVO_PIN_1 = 11;
+const int SERVO_PIN_2 = 12;
+const int RAMP_LOWERED_ANGLE = 15;
+const int RAMP_LIFTED_ANGLE = 85;
+bool rampDeployed = false;
+
+Servo rampServo; // Servo object (GPT told me to put it here not sure how this works yet)
 
 // motor_init
 int motorSpeed = 200; // 0–255
 
 void setup() {
   Serial.begin(9600);
+
+  // Ramp initialisation
+  rampServo.attach(SERVO_PIN_1);
+  rampServo.attach(SERVO_PIN_2);
+  deployRamp();
 
   // Set motor pins as output
   int motorPins[] = {
@@ -159,6 +176,7 @@ void stopAll() {
   analogWrite(PWM_BL, 0);
   analogWrite(PWM_FR, 0);
   analogWrite(PWM_BR, 0);
+  stowRamp();
 }
 
 // ultrasonic_read
@@ -171,4 +189,16 @@ long readUltrasonic(int trigPin, int echoPin) {
 
   long duration = pulseIn(echoPin, HIGH, 30000);
   return duration * 0.034 / 2;
+}
+
+void deployRamp() {
+  rampServo.write(RAMP_LOWERED_ANGLE);
+  rampDeployed = true;
+  Serial.println("RAMP LOWERED");
+}
+
+void stowRamp() {
+  rampServo.write(RAMP_LIFTED_ANGLE);
+  rampDeployed = false;
+  Serial.println("RAMP LIFTED");
 }
