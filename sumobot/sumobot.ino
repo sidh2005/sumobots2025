@@ -22,7 +22,7 @@ const int PWM_BR = 13;
 // ultrasonic_init
 const int trigPins[3] = {A1, A3, A5};  
 const int echoPins[3] = {A2, A4, A6};
-const int numSensors = 3;
+const int numSensors = 3; 
 const int detectionThreshold = 30; // cm
 
 // motor_init
@@ -71,8 +71,8 @@ void loop() {
     turnUntilCenterSeesOpponent(moveRight);
   } else if (distances[2] > 0 && distances[2] < detectionThreshold) {
     turnUntilCenterSeesOpponent(moveLeft);
-  } else {
-    stopAll();
+  } else { 
+    stopAll(); 
   }
 
   lastActionTime = millis();
@@ -171,5 +171,5 @@ long readUltrasonic(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
 
   long duration = pulseIn(echoPin, HIGH, 30000);
-  return duration * 0.034 / 2;
+  return duration * 0.034 / 2; 
 }
