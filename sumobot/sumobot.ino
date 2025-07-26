@@ -26,7 +26,7 @@ const int numSensors = 3;
 const int detectionThreshold = 30; // cm
 
 // motor_init
-int motorSpeed = 200; // 0–255
+int motorSpeed = 255; // 0–255
 
 unsigned long lastActionTime = 0;
 unsigned long cooldown = 500;
