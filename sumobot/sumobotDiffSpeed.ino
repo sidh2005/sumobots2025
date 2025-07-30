@@ -33,6 +33,7 @@ unsigned long lastActionTime = 0;
 unsigned long cooldown = 500;
 
 void setup() {
+  delay(5000);
   rampServo.attach(48);
   rampServo.write(90);
   delay(400); // quick ramp drop
@@ -75,6 +76,7 @@ void loop() {
   //make middle sensor to the middle turn right or left to face enemy
   //charge AFTER sensor is aligned 
   if (distances[1] > 0 && distances[1] < detectionThreshold) {
+    setMotorSpeed(255);
     moveForward();
   } else if (distances[0] > 0 && distances[0] < detectionThreshold) {
     turnUntilCenterSeesOpponent(moveRight);
@@ -87,7 +89,6 @@ void loop() {
   lastActionTime = millis();
   delay(100);
 }
-
 
 void turnUntilCenterSeesOpponent(void (*turnFunc)()) {
   unsigned long start = millis();
@@ -188,18 +189,31 @@ long readUltrasonic(int trigPin, int echoPin) {
   return duration * 0.034 / 2; 
 }
 
+void setMotorSpeed(int speed) {
+  motorSpeed = speed;
+}
+
 void searchLogic() {
+  setMotorSpeed(190);
   moveRight();
   delay(500);
   stopAll();
   delay(100);
-  if (readUltrasonic(trigPins[1], echoPins[1]) < detectionThreshold) return;
+  if (readUltrasonic(trigPins[1], echoPins[1]) < detectionThreshold) {
+    setMotorSpeed(255);
+    moveForward();
+    return;
+  }
 
   moveLeft();
   delay(1000);
   stopAll();
   delay(100);
-  if (readUltrasonic(trigPins[1], echoPins[1]) < detectionThreshold) return;
+  if (readUltrasonic(trigPins[1], echoPins[1]) < detectionThreshold) {
+    setMotorSpeed(255);
+    moveForward();
+    return;
+  }
 
   moveRight();
   delay(500);
