@@ -1,9 +1,10 @@
 #include <Arduino.h>
+#include <Servo.h>
+Servo rampServo;
 
 // pin_init_left
 const int IN1_FL = 2;
 const int IN2_FL = 3;
-
 const int PWM_FL = 4;
 
 const int IN1_BL = 5;
@@ -32,6 +33,12 @@ unsigned long lastActionTime = 0;
 unsigned long cooldown = 500;
 
 void setup() {
+  rampServo.attach(48);
+  rampServo.write(90);
+  delay(400); // quick ramp drop
+  rampServo.write(0);
+  delay(200); // quick return
+
   Serial.begin(9600);
 
   // Set motor pins as output
@@ -65,7 +72,6 @@ void loop() {
     distances[i] = readUltrasonic(trigPins[i], echoPins[i]);
   }
 
-
   //make middle sensor to the middle turn right or left to face enemy
   //charge AFTER sensor is aligned 
   if (distances[1] > 0 && distances[1] < detectionThreshold) {
@@ -75,7 +81,7 @@ void loop() {
   } else if (distances[2] > 0 && distances[2] < detectionThreshold) {
     turnUntilCenterSeesOpponent(moveLeft);
   } else { 
-    stopAll(); 
+    searchLogic();
   }
 
   lastActionTime = millis();
@@ -89,7 +95,12 @@ void turnUntilCenterSeesOpponent(void (*turnFunc)()) {
     turnFunc();
     long centerDist = readUltrasonic(trigPins[1], echoPins[1]);
     if (centerDist > 0 && centerDist < detectionThreshold) break;
-    if (millis() - start > 2000) break;
+    if (millis() - start > 2000) {
+      stopAll();
+      delay(100);
+      searchLogic();
+      return;
+    }
     delay(50);
   }
   stopAll();
@@ -175,4 +186,23 @@ long readUltrasonic(int trigPin, int echoPin) {
 
   long duration = pulseIn(echoPin, HIGH, 30000);
   return duration * 0.034 / 2; 
+}
+
+void searchLogic() {
+  moveRight();
+  delay(500);
+  stopAll();
+  delay(100);
+  if (readUltrasonic(trigPins[1], echoPins[1]) < detectionThreshold) return;
+
+  moveLeft();
+  delay(1000);
+  stopAll();
+  delay(100);
+  if (readUltrasonic(trigPins[1], echoPins[1]) < detectionThreshold) return;
+
+  moveRight();
+  delay(500);
+  stopAll();
+  delay(100);
 }
